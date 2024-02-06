@@ -22,9 +22,12 @@ def get_reads():
     with open("assignment1.fastq", "r") as fastq:
         fastq = fastq.readlines()
 
-    reads = fastq[1::4]  # start @ line 1, grab every 4th line
+    return fastq[1::4]  # start @ line 1, grab every 4th line
 
-    return reads
+
+def write_output(out_file, text):
+    with open(out_file, "w") as out:
+        out.write(text)
 
 
 def get_nodes_and_edges(reads, kmer_size):
@@ -41,15 +44,7 @@ def get_nodes_and_edges(reads, kmer_size):
             nodes.add(kmer)
             edges.add((start, end))
 
-    nodes = list(nodes)
-    edges = list(edges)
-
-    with open("nodes.txt", "w") as out:
-        out.write("\n".join(nodes))
-
-    with open("edges.txt", "w") as out:
-        out.write("\n".join([" -> ".join(x) for x in edges]))
-    return nodes, edges
+    return list(nodes), list(edges)
 
 
 def main():
@@ -62,6 +57,9 @@ def main():
 
     reads = get_reads()
     nodes, edges = get_nodes_and_edges(reads, kmer_size)
+
+    write_output("nodes.txt", "\n".join(nodes))
+    write_output("edges.txt", "\n".join([" -> ".join(x) for x in edges]))
 
 
 if __name__ == "__main__":
