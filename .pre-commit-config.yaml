@@ -1,0 +1,13 @@
+# Note that we recommend using https://github.com/psf/black-pre-commit-mirror instead
+# This will work about 2x as fast as using the hooks in this repository
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
