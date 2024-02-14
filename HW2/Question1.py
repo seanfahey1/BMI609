@@ -15,7 +15,11 @@ find this under Assignments - Assignment2_refgenome.fasta, Assignment2_read.fast
 
 
 class ReadNotFoundError(Exception):
-    pass
+    def __init__(self, read):
+        self.read = read
+
+    def __repr__(self):
+        print(f"Read {self.read} not found in reference sequence.")
 
 
 def suffix_array(seq):
@@ -44,10 +48,10 @@ def get_fasta(file_path):
     return record.seq
 
 
-def write_positions(positions):
+def write_positions(positions, read_len):
     with open("start_indexes.txt", "w") as output:
         for position in positions:
-            output.write(str(position) + "\n")
+            output.write(f"{position}-{position + read_len} \n")
 
 
 def main():
@@ -70,10 +74,13 @@ def main():
         # remove the match so it isn't accessed on the next loop
         sa.pop(sa.index(match))
 
+    if len(matches) == 0:
+        raise ReadNotFoundError(read_seq)
+
     positions = [x[1] for x in matches]
 
     _ = [print(x) for x in positions]
-    write_positions(positions)
+    write_positions(positions, len(read_seq))
 
 
 if __name__ == "__main__":
