@@ -27,7 +27,6 @@ def read_file():
         for i, score in enumerate(line.strip("\n")):
             adjusted_score = ord(score) - 33
             positions_dict[i].append(adjusted_score)
-
     return positions_dict
 
 
