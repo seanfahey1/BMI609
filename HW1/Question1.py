@@ -1,3 +1,4 @@
+import argparse
 import sys
 from collections import defaultdict
 
@@ -15,10 +16,25 @@ FASTQ file under Files->Assignment Files->assignment1.fastq.
 """
 
 
-def read_file():
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--i",
+        "-input",
+        type=str,
+        required=False,
+        default="./assignment1.fastq",
+        help="fastq file to check",
+    )
+
+    args = parser.parse_args()
+    return args.i
+
+
+def read_file(file):
     positions_dict = defaultdict(list)
 
-    with open("assignment1.fastq", "r") as fastq:
+    with open(file, "r") as fastq:
         fastq = fastq.readlines()
 
     quality_scores = fastq[3::4]  # start @ line 3, grab every 4th line
@@ -55,7 +71,8 @@ def plot(scores_dict):
 
 
 def main():
-    scores_dict = read_file()
+    file = get_args()
+    scores_dict = read_file(file)
     plot(scores_dict)
 
 
