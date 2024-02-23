@@ -1,10 +1,12 @@
 import argparse
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from plotly.io import to_html
 
 """
 12.5 points - You will write a program in Python/R/C (just pick a language you like – I’m listing ones here that I
@@ -56,7 +58,7 @@ def plot(scores_dict):
         mean_score = np.mean(scores_dict[position])
         scores_df.loc[len(scores_df)] = [position + 1, mean_score, "mean"]
 
-    px.line(
+    fig = px.line(
         scores_df,
         x="position",
         y="score",
@@ -67,13 +69,17 @@ def plot(scores_dict):
         title="Median Quality Scores",
         xaxis_title="position in read",
         yaxis_title="quality score",
-    ).show()
+    )
+    fig.show()
+    return fig
 
 
 def main():
-    file = get_args()
+    file = Path(get_args())
     scores_dict = read_file(file)
     plot(scores_dict)
+    with open(file.parent / (file.stem + "_plot.html"), "w") as out:
+        out.write(to_html(plot))
 
 
 if __name__ == "__main__":
