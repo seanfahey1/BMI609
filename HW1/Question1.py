@@ -28,9 +28,17 @@ def get_args():
         default="./assignment1.fastq",
         help="fastq file to check",
     )
+    parser.add_argument(
+        "--o",
+        "-output",
+        type=str,
+        required=False,
+        default="./plot.html",
+        help="plot file name (relative path)",
+    )
 
     args = parser.parse_args()
-    return args.i
+    return args.i, args.o
 
 
 def read_file(file):
