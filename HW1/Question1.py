@@ -86,9 +86,9 @@ def main():
     args = get_args()
     file, plot_output = Path(args.i), Path(args.o)
     scores_dict = read_file(file)
-    plot(scores_dict)
+    fig = plot(scores_dict)
     with open(file.parent / (file.stem + "_plot.html"), "w") as out:
-        out.write(to_html(plot))
+        out.write(to_html(fig))
 
 
 if __name__ == "__main__":
