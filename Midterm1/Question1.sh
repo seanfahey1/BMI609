@@ -7,3 +7,4 @@
 wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR23143762/SRR23143762
 fastq-dump -I --split-files SRR23143762
 python3 ../HW1/Question1.py --i SRR23143762_1.fastq --o SRR23143762_1_plot.html
+python3 ../HW1/Question1.py --i SRR23143762_2.fastq --o SRR23143762_2_plot.html
