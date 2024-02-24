@@ -38,7 +38,7 @@ def get_args():
     )
 
     args = parser.parse_args()
-    return args.i, args.o
+    return args
 
 
 def read_file(file):
@@ -83,7 +83,8 @@ def plot(scores_dict):
 
 
 def main():
-    file = Path(get_args())
+    args = get_args()
+    file, plot_output = Path(args.i), Path(args.o)
     scores_dict = read_file(file)
     plot(scores_dict)
     with open(file.parent / (file.stem + "_plot.html"), "w") as out:
