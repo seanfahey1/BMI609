@@ -35,7 +35,7 @@ def main():
     gtf.set_index("gene_id", inplace=True)
     gtf = gtf["gene_name"]
 
-    df = df.join(gtf)
+    df = df.join(gtf, how="left")
     with open("DESeq2_results_gene_name.csv", "w") as out:
         out.write(df.to_csv(sep=",", header=True, index=True))
 
