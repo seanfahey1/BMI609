@@ -9,6 +9,9 @@ done
 # install deps. for deseq2
 sudo apt-get install -y libxml2-dev libcurl4-openssl-dev
 
+# install python deps
+pip install pandas HTSeq
+
 # install and source STAR
 cd /home/exouser/tools
 wget https://github.com/alexdobin/STAR/archive/2.7.11b.tar.gz && tar -xzf 2.7.11b.tar.gz
@@ -27,7 +30,6 @@ STAR --genomeDir danio_genome/STAR --readFilesIn 2cells_1.fastq 2cells_2.fastq -
 STAR --genomeDir danio_genome/STAR --readFilesIn 6h_1.fastq 6h_2.fastq --runThreadN 12 --outFileNamePrefix 6hour_aligned
 
 # htseq counts table
-pip install HTSeq
 python -m HTSeq.scripts.count 2cell_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf > htseq_count_2_cell.txt
 python -m HTSeq.scripts.count 6hour_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf > htseq_count_6_hour.txt
 
