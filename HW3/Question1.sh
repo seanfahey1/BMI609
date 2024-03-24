@@ -34,7 +34,7 @@ python -m HTSeq.scripts.count 2cell_alignedAligned.out.sam danio_genome/Danio_re
 python -m HTSeq.scripts.count 6hour_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf > htseq_count_6_hour.txt
 
 # call deseq2 R file
-R ./deseq2.R
+Rscript deseq2.R
 
 # merge output file with gene names
 ./merge_outputs.py
