@@ -25,9 +25,22 @@ sampleTable$condition <- factor(sampleTable$condition)
 ddsHTSeq <- DESeqDataSetFromHTSeqCount(
     sampleTable = sampleTable,
     directory = directory,
-    design= ~ condition
+    design= ~ 1
     )
 
-# note: I'm hitting an error here...
 dds <- DESeq(ddsHTSeq)
-res <- results(dds, contrast=c("condition","2cell","6hour"))
+res <- results(dds)
+res_clean = res[!is.na(res$padj),]
+res_clean = subset(res_clean, padj < 0.05)
+
+write.table(
+    res_clean,
+    file = "DESeq2_results.csv",
+    append = FALSE,
+    quote = TRUE,
+    sep = ",",
+    eol = "\n",
+    na = "NA",
+    row.names = TRUE,
+    col.names = TRUE,
+    )
