@@ -37,7 +37,7 @@ def main():
 
     gtf_dict = gtf.to_dict()
     df["gene_name"] = df.index.map(gtf_dict)
-    df = df.sort_values(by="gene_name", ascending=True)
+    df = df.sort_values(by="padj", ascending=True)
 
     with open("DESeq2_results_gene_name.csv", "w") as out:
         out.write(df.to_csv(sep=",", header=True, index=True))
