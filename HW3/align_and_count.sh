@@ -6,6 +6,9 @@ do
     wget ftp://ftp.ebi.ac.uk/pub/training/Train_online/RNA-seq_exercise/$file
 done
 
+# install deps. for deseq2
+sudo apt-get install -y libxml2-dev libcurl4-openssl-dev
+
 # install and source STAR
 cd /home/exouser/tools
 wget https://github.com/alexdobin/STAR/archive/2.7.11b.tar.gz && tar -xzf 2.7.11b.tar.gz
@@ -25,8 +28,8 @@ STAR --genomeDir danio_genome/STAR --readFilesIn 6h_1.fastq 6h_2.fastq --runThre
 
 # htseq counts table
 pip install HTSeq
-python -m HTSeq.scripts.count 2cell_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf --samout htseq_count_2_cell.sam
-python -m HTSeq.scripts.count 6hour_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf --samout htseq_count_6_hour.sam
+python -m HTSeq.scripts.count 2cell_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf > htseq_count_2_cell.txt
+python -m HTSeq.scripts.count 6hour_alignedAligned.out.sam danio_genome/Danio_rerio.Zv9.66.gtf > htseq_count_6_hour.txt
 
 # call deseq2 R file
 R ./deseq2.R
