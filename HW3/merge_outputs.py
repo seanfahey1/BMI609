@@ -24,10 +24,10 @@ def extract_gene_id(row):
 
 
 def main():
-    with open("HW3/DESeq2_results.csv", "r") as f:
+    with open("DESeq2_results.csv", "r") as f:
         df = pd.read_csv(f, header=0)
 
-    with open("HW3/danio_genome/Danio_rerio.Zv9.66.gtf", "r") as gtf:
+    with open("danio_genome/Danio_rerio.Zv9.66.gtf", "r") as gtf:
         gtf = pd.read_csv(gtf, header=None, sep="\t", low_memory=False)
 
     gtf["gene_name"] = gtf.apply(extract_gene_name, axis=1)
