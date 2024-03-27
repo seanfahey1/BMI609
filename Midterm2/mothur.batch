@@ -1,8 +1,23 @@
-make.file(inputdir=reads, type=fastq, prefix=zr13074)
+# build contigs
+make.file(inputdir=data, type=fastq, prefix=zr13074)
 make.contigs(file=zr13074.files)
 summary.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table)
+
+# remove redundancies
 screen.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table, maxambig=0, maxlength=275, maxhomop=8)
-unique.seqs(fasta=zr13074.trim.contigs.good.fasta, count=zr13074.contigs.good.count_table)
+unique.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table)
+summary.seqs(count=zr13074.trim.contigs.count_table)
+
+# sub sample the alignment database to the desired region
+# start and end determined by aligning the E. coli 16S to the reference to find where the 16S region falls
+# from this protocol: https://mothur.org/blog/2016/Customization-for-your-region/
+pcr.seqs(fasta=silva.nr_v132.align, start=6388, end=13861, keepdots=F)
+rename.file(input=silva.nr_v132.pcr.align, new=silva.v4.fasta)
+summary.seqs(fasta=silva.v4.fasta)
+
+# align to reference
+align.seqs(fasta=zr13074.trim.contigs.unique.fasta, reference=silva.v4.fasta)
+
 
 
 #dist.seqs(fasta=final.fasta, processors=12)
