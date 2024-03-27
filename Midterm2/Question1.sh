@@ -14,5 +14,7 @@
 sudo apt-get install mothur
 wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.nr_v132.tgz
 
+gunzip -k reads/zr13074_4V3V4_R1.fastq.gz
+gunzip -k reads/zr13074_4V3V4_R2.fastq.gz
 
 mothur > make.file(inputdir=reads, type=fastq, prefix=zr13074)

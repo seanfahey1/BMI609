@@ -2,7 +2,7 @@ make.file(inputdir=reads, type=fastq, prefix=zr13074)
 make.contigs(file=zr13074.files)
 summary.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table)
 screen.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table, maxambig=0, maxlength=275, maxhomop=8)
-
+unique.seqs(fasta=zr13074.trim.contigs.good.fasta, count=zr13074.contigs.good.count_table)
 
 
 #dist.seqs(fasta=final.fasta, processors=12)
