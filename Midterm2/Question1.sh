@@ -10,3 +10,9 @@
 
 # Thereon, each one of you will use the FASTQ files I've assigned you (see below), and analyze it. Then, submit all plots, result files, and your code used in a Zipped folder. You'll find all FASTQ files under Files->Assignment Files->Midterm 2
 # zr13074_4V3V4_R1.fastq.gz and zr13074_4V3V4_R1.fastq.gz
+
+sudo apt-get install mothur
+wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.nr_v132.tgz
+
+
+mothur > make.file(inputdir=reads, type=fastq, prefix=zr13074)
