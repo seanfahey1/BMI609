@@ -168,3 +168,4 @@ documents/
 *.fastq
 .vscode
 *.gtf
+__MACOSX/
