@@ -1,6 +1,6 @@
 import sys
-from Bio import SeqIO
 
+from Bio import SeqIO
 
 """
 For this assignment, you will write code to

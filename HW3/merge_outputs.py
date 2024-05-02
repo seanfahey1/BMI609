@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import pandas as pd
 import re
 import sys
 
+import pandas as pd
 
 regex = r'gene_id "(.*)"; transcript_id ".*"; exon_number "\d+"; gene_name "(.*)"; gene_biotype'
 
