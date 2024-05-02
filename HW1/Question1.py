@@ -1,9 +1,12 @@
+import argparse
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from plotly.io import to_html
 
 """
 12.5 points - You will write a program in Python/R/C (just pick a language you like – I’m listing ones here that I
@@ -15,10 +18,33 @@ FASTQ file under Files->Assignment Files->assignment1.fastq.
 """
 
 
-def read_file():
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--i",
+        "-input",
+        type=str,
+        required=False,
+        default="./assignment1.fastq",
+        help="fastq file to check",
+    )
+    parser.add_argument(
+        "--o",
+        "-output",
+        type=str,
+        required=False,
+        default="./plot.html",
+        help="plot file name (relative path)",
+    )
+
+    args = parser.parse_args()
+    return args
+
+
+def read_file(file):
     positions_dict = defaultdict(list)
 
-    with open("assignment1.fastq", "r") as fastq:
+    with open(file, "r") as fastq:
         fastq = fastq.readlines()
 
     quality_scores = fastq[3::4]  # start @ line 3, grab every 4th line
@@ -40,7 +66,7 @@ def plot(scores_dict):
         mean_score = np.mean(scores_dict[position])
         scores_df.loc[len(scores_df)] = [position + 1, mean_score, "mean"]
 
-    px.line(
+    fig = px.line(
         scores_df,
         x="position",
         y="score",
@@ -51,12 +77,18 @@ def plot(scores_dict):
         title="Median Quality Scores",
         xaxis_title="position in read",
         yaxis_title="quality score",
-    ).show()
+    )
+    fig.show()
+    return fig
 
 
 def main():
-    scores_dict = read_file()
-    plot(scores_dict)
+    args = get_args()
+    file, plot_output = Path(args.i), Path(args.o)
+    scores_dict = read_file(file)
+    fig = plot(scores_dict)
+    with open(file.parent / (file.stem + "_plot.html"), "w") as out:
+        out.write(to_html(fig))
 
 
 if __name__ == "__main__":

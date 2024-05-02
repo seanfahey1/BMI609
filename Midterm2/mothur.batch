@@ -1,0 +1,62 @@
+# build contigs
+make.file(inputdir=data, type=fastq, prefix=zr13074)
+make.contigs(file=zr13074.files)
+summary.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table)
+
+# remove redundancies
+screen.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table, maxambig=0, maxlength=275, maxhomop=8)
+unique.seqs(fasta=zr13074.trim.contigs.fasta, count=zr13074.contigs.count_table)
+summary.seqs(count=zr13074.trim.contigs.count_table)
+
+# sub sample the alignment database to the desired region
+# start and end determined by aligning the E. coli 16S to the reference to find where the 16S region falls
+# from this protocol: https://mothur.org/blog/2016/Customization-for-your-region/
+pcr.seqs(fasta=silva.nr_v132.align, start=6388, end=13861, keepdots=F)
+rename.file(input=silva.nr_v132.pcr.align, new=silva.v4.fasta)
+summary.seqs(fasta=silva.v4.fasta)
+
+# align to reference
+align.seqs(fasta=zr13074.trim.contigs.unique.fasta, reference=silva.v4.fasta)
+summary.seqs(fasta=zr13074.trim.contigs.unique.align, count=zr13074.trim.contigs.count_table)
+
+# screen to only the region from the previous summary step
+screen.seqs(fasta=zr13074.trim.contigs.unique.align, count=zr13074.trim.contigs.count_table, start=1, end=7474)
+summary.seqs(fasta=current, count=current)
+
+# filter gap characters and repeat the redundancy removal step
+filter.seqs(fasta=zr13074.trim.contigs.unique.good.align, vertical=T, trump=.)
+unique.seqs(fasta=zr13074.trim.contigs.unique.good.filter.fasta, count=zr13074.trim.contigs.good.count_table)
+
+# de-noise with pre.cluster
+pre.cluster(fasta=zr13074.trim.contigs.unique.good.filter.unique.fasta, count=zr13074.trim.contigs.unique.good.filter.count_table, diffs=2)
+
+# removing chimeras with VSERACH algorithm
+chimera.vsearch(fasta=zr13074.trim.contigs.unique.good.filter.unique.precluster.fasta, count=zr13074.trim.contigs.unique.good.filter.unique.precluster.count_table, dereplicate=t, vsearch=/home/exouser/tools/vsearch-2.27.0/bin/vsearch)
+summary.seqs(fasta=current, count=current)
+
+# classify and remove undesirable lineages
+classify.seqs(fasta=zr13074.trim.contigs.unique.good.filter.unique.precluster.denovo.vsearch.fasta, count=zr13074.trim.contigs.unique.good.filter.unique.precluster.denovo.vsearch.count_table, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax)
+remove.lineage(fasta=zr13074.trim.contigs.unique.good.filter.unique.precluster.denovo.vsearch.fasta, count=zr13074.trim.contigs.unique.good.filter.unique.precluster.denovo.vsearch.count_table, taxonomy=zr13074.trim.contigs.unique.good.filter.unique.precluster.denovo.vsearch.pds.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
+
+# create taxonomy output files
+summary.tax(taxonomy=current, count=current)
+rename.file(fasta=current, count=current, taxonomy=current, prefix=final)
+
+# cluster into OTUs
+dist.seqs(fasta=final.fasta, cutoff=0.03)
+cluster(column=final.dist, count=final.count_table)
+
+# determine how many members are in each OTU and what the consensus taxonomy is for each OTU
+make.shared(list=final.opti_mcc.list, count=final.count_table, label=0.03)
+classify.otu(list=final.opti_mcc.list, count=final.count_table, taxonomy=final.taxonomy, label=0.03)
+
+# phylogeny analysis prep
+dist.seqs(fasta=final.fasta, output=lt)
+clearcut(phylip=final.phylip.dist)
+
+# simple alpha diversity
+rarefaction.single(shared=final.opti_mcc.shared, calc=sobs, freq=100)
+summary.single(shared=final.opti_mcc.shared, calc=nseqs-coverage-sobs-invsimpson, subsample=T)
+
+# phylogeny alpha diversity
+phylo.diversity(tree=final.phylip.tre, count=final.count_table, rarefy=T)
